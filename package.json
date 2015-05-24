@@ -1,0 +1,29 @@
+{
+  "name": "ants",
+  "version": "0.0.1",
+  "description": "An ants collony simulation",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rafinskipg/ants.git"
+  },
+  "keywords": [
+    "ants",
+    "game"
+  ],
+  "author": "rafinskipg",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rafinskipg/ants/issues"
+  },
+  "homepage": "https://github.com/rafinskipg/ants#readme",
+  "devDependencies": {
+    "commander": "^2.8.1"
+  },
+  "dependencies": {
+    "lodash": "^3.9.1"
+  }
+}
