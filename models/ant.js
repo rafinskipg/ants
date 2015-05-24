@@ -1,6 +1,8 @@
 var logger = require('../scripts/logger');
 var uid = require('uid');
 var generateName = require('sillyname');
+var Victor = require('victor');
+var events = require('../scripts/events');
 
 function Ant(colony){
 	this.id = uid();
@@ -11,12 +13,22 @@ function Ant(colony){
 	this.energy = 1.0;
 	this.strength = 3.0;
 	this.speed = 10;
+	this.location = new Victor(colony.position.x, colony.position.y);
 
 	logger.info('Created Ant with name', this.name, ' - role -  ', this.role, ' for colony : ' , colony.name);
 }
 
 Ant.prototype.tick = function(dt){
-	this.energy -= 1;
+	this.fed -= 0.000001;
+	this.energy -= 0.000001;
+
+	if(this.fed <= 0.3){
+		events.trigger('colony:ant:feed', this);
+	}
+
+	if(this.fed <= 0.3){
+		this.energy -= 0.1;
+	}
 
 	if(this.energy <= 0){
 		this.alive = false;
@@ -25,6 +37,7 @@ Ant.prototype.tick = function(dt){
 
 Ant.prototype.eat = function(amount){
 	this.fed += amount;
+	this.energy += amount;
 };
 
 

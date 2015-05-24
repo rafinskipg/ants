@@ -5,7 +5,6 @@ var eventEmitter = new events.EventEmitter();
 eventEmitter.setMaxListeners(100);
 
 var _ = require('lodash');
-var errorLogger = require('./errorLogger');
 var suscribed = {};
 
 function suscribe (fnNames, originModule, fn, errCb){
@@ -49,7 +48,7 @@ function trigger(fnName, args){
 }
 
 function error(fnName, args){ 
-  errorLogger.add(fnName, args);
+  console.log('ERROR - ', fnName);
   eventEmitter.emit('error'+fnName, args);
 }
 

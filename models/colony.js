@@ -3,12 +3,16 @@ var logger = require('../scripts/logger');
 var Ant = require('./ant');
 var _ = require('lodash');
 var events = require('../scripts/events');
+var Victor = require('victor');
 
 function Colony(antsAmount, name){
 	this.name = name;
 	this.ants = [];
-	this.supplies = 100;
+	this.supplies = {
+        grain : 10
+    };
 	this.id = uid();
+    this.position = new Victor(0,0);
 
 	this.suscribe();
 
@@ -17,6 +21,7 @@ function Colony(antsAmount, name){
 	}
 
 	logger.highlight('Created colony with ants', this.ants.length, ' and name ', this.name);
+    logger.blue('Colony has resources: ', JSON.stringify(this.supplies));
 }
 
 Colony.prototype.suscribe = function(){
@@ -36,19 +41,28 @@ Colony.prototype.tick = function(dt){
 		if(ant.alive){
 			return ant;
 		}else{
-			logger.warn('The colony has lost one citizen :(');
+			logger.warn('The colony has lost one citizen :(', 'Dear', ant.name);
 		}
 	}));
 
 };
 
-Colony.prototype.receiveSupplies = function(amount){
-    this.supplies += amount;
+Colony.prototype.receiveSupplies = function(amount, type){
+    this.supplies[type] += amount;
 };
 
 Colony.prototype.feedAnt = function(ant){
-    this.supplies -= 10;
-    ant.eat(10);
+    var amount = 0.133;
+    var type = 'grain';
+
+    var supplyAmount = this.supplies[type] > amount ? amount : this.supplies[type];
+    this.supplies[type] -= supplyAmount;
+
+    if(supplyAmount){
+        logger.green('Feeding ant :', ant.name, 'with', type, supplyAmount, 'left', this.supplies[type]);
+        ant.eat(supplyAmount, type);    
+    }
+    
 };
 
 module.exports = Colony;
