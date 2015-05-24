@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "ascii-art": "0.0.2-alpha",
+    "colors": "^1.1.0",
     "lodash": "^3.9.1",
     "moment": "^2.10.3",
     "sillyname": "0.0.3",

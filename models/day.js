@@ -6,9 +6,7 @@ function Day(){
 	this.number = 1;
 	this.time = (new Date(2015, 05, 01, 00, 00)).getTime();
 	this.weather = 'sunny';
-	this.then = Date.now();
-	this.now = Date.now();
-
+	
 	logger.info('Created Day with weather', this.weather, ' and date ', moment(this.time).format("MM-DD-YYYY HH:mm"));
 }
 
@@ -16,13 +14,9 @@ Day.prototype.logTime = function(){
 	logger.info('Day time: - ', moment(this.time).format("MM-DD-YYYY HH:mm"));
 };
 
-Day.prototype.tick = function(){
-	this.now = Date.now();
-	var dt = this.now - this.then;
+Day.prototype.tick = function(dt){
 	
-	this.time += dt * 1000;
-
-	this.then = this.now;
+	this.time += dt;
 
 	//this.logTime();
 };
