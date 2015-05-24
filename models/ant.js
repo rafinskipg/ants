@@ -23,4 +23,9 @@ Ant.prototype.tick = function(dt){
 	}
 };
 
+Ant.prototype.eat = function(amount){
+	this.fed += amount;
+};
+
+
 module.exports = Ant;
