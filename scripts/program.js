@@ -1,8 +1,13 @@
 var logger = require('./logger');
-var 
 
-function init(){
+function init(options){
+
+	logger.fancy('ANTS - v0');
 	logger.info('Starting program');
 
-	
+
+}
+
+module.exports = {
+	init : init
 }

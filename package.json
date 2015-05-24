@@ -24,6 +24,7 @@
     "commander": "^2.8.1"
   },
   "dependencies": {
+    "ascii-art": "0.0.2-alpha",
     "lodash": "^3.9.1"
   }
 }
