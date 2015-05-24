@@ -4,9 +4,10 @@ function info(){
 	console.log.apply(null, arguments);
 }
 
-function fancy(text){
+function fancy(text, cb){
 	art.font(text, 'Basic', 'red', function(rendered){
 	    console.log(rendered);
+	    cb();
 	});
 }
 

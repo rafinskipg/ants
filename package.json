@@ -25,6 +25,8 @@
   },
   "dependencies": {
     "ascii-art": "0.0.2-alpha",
-    "lodash": "^3.9.1"
+    "lodash": "^3.9.1",
+    "sillyname": "0.0.3",
+    "uid": "0.0.2"
   }
 }
