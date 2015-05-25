@@ -4,13 +4,15 @@ var Ant = require('./ant');
 var _ = require('lodash');
 var events = require('../scripts/events');
 var Victor = require('victor');
+var Terrain = require('./colonyTerrain');
 
 function Colony(antsAmount, name){
 	this.name = name;
 	this.ants = [];
+	this.terrain = new Terrain(0,0);
 	this.supplies = {
-        grain : 10
-    };
+  	grain : 10
+  };
 	this.id = uid();
     this.position = new Victor(0,0);
 
@@ -36,6 +38,8 @@ Colony.prototype.suscribe = function(){
 
 Colony.prototype.tick = function(dt){
 
+	this.checkSupplies();
+
 	this.ants = _.compact(this.ants.map(function(ant){
 		ant.tick(dt);
 		if(ant.alive){
@@ -44,7 +48,20 @@ Colony.prototype.tick = function(dt){
 			logger.warn('The colony has lost one citizen :(', 'Dear', ant.name);
 		}
 	}));
+};
 
+Colony.prototype.checkSupplies = function(){
+	var totalSupplies = _.keys(this.supplies).reduce(function(prev, next){
+		return prev + this.supplies[next];
+	}.bind(this), 0);
+
+	var totalSuppliesWouldConsumeAllAnts = this.ants.reduce(function(prev, next){
+		return prev + next.eatCapacity;
+	}.bind(this), 0);
+
+	if(totalSupplies < totalSuppliesWouldConsumeAllAnts){
+		events.trigger('colony:needsfood');
+	}
 };
 
 Colony.prototype.receiveSupplies = function(amount, type){
@@ -52,7 +69,7 @@ Colony.prototype.receiveSupplies = function(amount, type){
 };
 
 Colony.prototype.feedAnt = function(ant){
-    var amount = 0.133;
+    var amount = ant.eatCapacity;
     var type = 'grain';
 
     var supplyAmount = this.supplies[type] > amount ? amount : this.supplies[type];
@@ -60,9 +77,9 @@ Colony.prototype.feedAnt = function(ant){
 
     if(supplyAmount){
         logger.green('Feeding ant :', ant.name, 'with', type, supplyAmount, 'left', this.supplies[type]);
-        ant.eat(supplyAmount, type);    
+        ant.eat(supplyAmount, type);
     }
-    
+
 };
 
 module.exports = Colony;
