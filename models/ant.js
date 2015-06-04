@@ -17,7 +17,7 @@ function Ant(colony){
 	this.strength = 3.0;
 	this.speed = 10;
 
-	this.action = 'working';
+	this.action = 'stopped';
 
 	this.location = new Victor(colony.position.x, colony.position.y);
 
@@ -25,30 +25,58 @@ function Ant(colony){
 }
 
 Ant.prototype.tick = function(dt){
+
+	//Apply time constraints, like hunger
+	//TODO: remove energy based on the job its doing
 	this.fed -= 0.000001;
 	this.energy -= 0.000001;
 
-	if(this.action === 'working'){
+	switch (this.action) {
+		case 'stopped':
+			events.trigger('colony:ant:giveMeAnythingToDo', this);
+			break;
+		case 'goto':
+			//This update movement
+			break;
+		case 'working':
+			//This do work action
+			break;
+		default:
 
 	}
 
 	if(this.fed <= this.nutritionWarning){
 		logger.warn(this.name, 'is starving...');
+		//TODO: change for ant:needsFood that will trigger a goto action to the nearest food location
 		events.trigger('colony:ant:feed', this);
 	}
 
+	//It has hunger, it is dying of starvation
 	if(this.fed <= this.nutritionWarning){
 		this.energy -= 0.1;
 	}
 
+	//No energy, it dies or goes to sleep
 	if(this.energy <= 0){
 		this.alive = false;
 	}
 };
 
+/**
+	Gives 'fed' and 'energy' to the ant
+**/
 Ant.prototype.eat = function(amount){
 	this.fed += amount * 10;
 	this.energy += amount * 10;
+};
+
+/**
+	Sets an action and a completion callback
+	TODO: add uncompletion callback
+**/
+Ant.prototype.setAction = function(actionName, callback){
+	this.actionCallback = callback;
+	this.action = actionName;
 };
 
 

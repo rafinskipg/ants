@@ -14,7 +14,7 @@ function Colony(antsAmount, name){
   	grain : 10
   };
 	this.id = uid();
-    this.position = new Victor(0,0);
+  this.position = new Victor(0,0);
 
 	this.suscribe();
 
@@ -30,6 +30,8 @@ Colony.prototype.suscribe = function(){
     events.suscribe('colony:underattack', 'colony', function(){ });
 
     events.suscribe('colony:ant:feed', 'colony', this.feedAnt.bind(this));
+
+		events.suscribe('colony:ant:giveMeAnythingToDo', 'colony', this.assignAntWork.bind(this));
 
     events.suscribe('colony:ant:addSupplies', 'colony', this.receiveSupplies.bind(this));
 
@@ -50,6 +52,8 @@ Colony.prototype.tick = function(dt){
 	}));
 };
 
+//Evaluate the level of supplies
+//TODO: check N food shells
 Colony.prototype.checkSupplies = function(){
 	var totalSupplies = _.keys(this.supplies).reduce(function(prev, next){
 		return prev + this.supplies[next];
@@ -64,10 +68,15 @@ Colony.prototype.checkSupplies = function(){
 	}
 };
 
+//TODO: move the resources to the food shell
 Colony.prototype.receiveSupplies = function(amount, type){
     this.supplies[type] += amount;
 };
 
+/**
+	Give food to an ant and quit that amount of resources from the box of food
+	TODO: implement some kind of box shell that will handle the resources, and we can instantiate many of them
+**/
 Colony.prototype.feedAnt = function(ant){
     var amount = ant.eatCapacity;
     var type = 'grain';
@@ -80,6 +89,15 @@ Colony.prototype.feedAnt = function(ant){
         ant.eat(supplyAmount, type);
     }
 
+};
+
+Colony.prototype.assignAntWork = function(ant){
+	//Tell what to do based on ant role
+	var callback = function(){
+		ant.setAction('excavate');
+	};
+
+	ant.setAction('goto', { x : 12, y : 12}, callback);
 };
 
 module.exports = Colony;
