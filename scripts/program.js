@@ -1,6 +1,7 @@
 var logger = require('./logger');
 var Colony = require('../models/colony');
 var Day = require('../models/day');
+var communicate = require('./communication/communicate');
 
 var now, then;
 
@@ -11,12 +12,12 @@ function init(options){
 	logger.fancy('ANTS - v0', function(){
 		logger.info('Starting program');
 
-		
+
 		var colony = new Colony(10, options.colony_name);
 		var day = new Day();
 		loop(colony, day);
 	});
-	
+
 }
 
 function loop(colony, day){
@@ -30,6 +31,8 @@ function loop(colony, day){
 	process.nextTick(function(){
 		loop(colony, day);
 	});
+
+	communicate({ colony : colony });
 }
 
 module.exports = {

@@ -29,10 +29,11 @@ Ant.prototype.tick = function(dt){
 	this.energy -= 0.000001;
 
 	if(this.action === 'working'){
-		
+
 	}
 
 	if(this.fed <= this.nutritionWarning){
+		logger.warn(this.name, 'is starving...');
 		events.trigger('colony:ant:feed', this);
 	}
 
@@ -46,8 +47,8 @@ Ant.prototype.tick = function(dt){
 };
 
 Ant.prototype.eat = function(amount){
-	this.fed += amount;
-	this.energy += amount;
+	this.fed += amount * 10;
+	this.energy += amount * 10;
 };
 
 
