@@ -1,6 +1,10 @@
 #ants
 
-Ants simulation / game.
+**NodeJS ants game, communication with Socket.IO**
+
+In this example the core processing of the game is made by the server side, and it just sends  JSON containing the new state to the clients, the clients will refresh it's interface and paint the new state with a canvas or whatever. 
+
+## Rules
 
 When the queen ant dies, you lose. If you manage to have a big colony you can create a new queen ant create more colonies.
 
