@@ -1,7 +1,8 @@
 
 /** Hey **/
 
-var program = require('./scripts/program');
+//var program = require('./scripts/program');
+var server = require('./scripts/server');
 var defaults = require('./config/defaults');
 var commander = require('commander');
 var _ = require('lodash');
@@ -25,4 +26,9 @@ if (commander.player_name){
     console.log('  - Player name %s', commander.player_name);
 }
 
-program.init(options);
+server.init({
+  port : 3000
+});
+
+
+//program.init(options);

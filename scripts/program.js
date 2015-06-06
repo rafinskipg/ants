@@ -3,7 +3,7 @@ var Colony = require('../models/colony');
 var Day = require('../models/day');
 var communicate = require('./communication/communicate');
 
-var now, then;
+var now, then, running = true;
 
 function init(options){
 	then = Date.now();
@@ -20,6 +20,10 @@ function init(options){
 
 }
 
+function stop(){
+	running = false;
+}
+
 function loop(colony, day){
 	now = Date.now();
 	var dt = (now - then) * 1000;
@@ -28,9 +32,12 @@ function loop(colony, day){
 	colony.tick(dt);
 
 	now = then;
-	process.nextTick(function(){
-		loop(colony, day);
-	});
+
+	if(running){
+		process.nextTick(function(){
+			loop(colony, day);
+		});
+	}
 
 	communicate({ colony : colony });
 }
@@ -38,3 +45,16 @@ function loop(colony, day){
 module.exports = {
 	init : init
 }
+
+
+//Child process handling
+process.on('message', function(m) {
+	switch(m.action){
+		case 'start':
+			init(m.options);
+		break;
+		case 'stop':
+			stop();
+		break;
+	}
+});
