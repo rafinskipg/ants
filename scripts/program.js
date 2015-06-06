@@ -21,6 +21,7 @@ function init(options){
 }
 
 function stop(){
+	console.log('stop');
 	running = false;
 }
 
@@ -33,13 +34,14 @@ function loop(colony, day){
 
 	now = then;
 
+	communicate({ colony : colony });
+
 	if(running){
 		process.nextTick(function(){
 			loop(colony, day);
 		});
 	}
-
-	communicate({ colony : colony });
+	
 }
 
 module.exports = {

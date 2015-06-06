@@ -28,8 +28,8 @@ Ant.prototype.tick = function(dt){
 
 	//Apply time constraints, like hunger
 	//TODO: remove energy based on the job its doing
-	this.fed -= 0.000001;
-	this.energy -= 0.000001;
+	this.fed -= 0.0001;
+	this.energy -= 0.0001;
 
 	switch (this.action) {
 		case 'stopped':

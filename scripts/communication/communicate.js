@@ -7,7 +7,9 @@ function communicate(data, to){
   to = to ? to : 'all';
 
   if(to === 'all'){
-    process.send({ data : data});
+    process.nextTick(function() {
+      process.send({ data : data});
+    });
     //_broadCast(data, endpoints.getAll());
   }else{
     if(typeof(to) === 'string'){

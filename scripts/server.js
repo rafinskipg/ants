@@ -1,6 +1,16 @@
 'use strict';
 
-var currentState ;
+var currentState;
+
+var cp = require('child_process');
+
+var forkedGame = cp.fork(__dirname + '/program.js');
+
+forkedGame.on('message', function(m) {
+  process.nextTick(function() {
+    currentState = m;
+  });
+});
 
 function init(options){
   var app = require('express')();
@@ -14,6 +24,15 @@ function init(options){
     res.send(currentState);
   });
 
+  app.get('/stop', function (req, res) {
+    //TODO: send git submodule ants-client
+    forkedGame.send({action : 'stop'});
+
+    process.nextTick(function(){
+      res.send(currentState);
+    });
+  });
+
   io.on('connection', function (socket) {
     socket.emit('news', { hello: 'world' });
     socket.on('my other event', function (data) {
@@ -21,15 +40,9 @@ function init(options){
     });
   });
 
-  var cp = require('child_process');
+  
 
-  var n = cp.fork(__dirname + '/program.js');
-
-  n.on('message', function(m) {
-    currentState = m;
-  });
-
-  n.send({ action: 'start', options : options });
+  forkedGame.send({ action: 'start', options : options });
 }
 
 
