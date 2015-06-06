@@ -37,7 +37,7 @@ function loop(colony, day){
 	communicate({ colony : colony });
 
 	if(running){
-		process.nextTick(function(){
+		setImmediate(function(){
 			loop(colony, day);
 		});
 	}
